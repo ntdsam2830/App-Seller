@@ -22,7 +22,6 @@
 .quill {
   background-color: white;
 }
-
 .form-control {
   box-shadow: none;
   border-color: var(--color-c3d4da);
@@ -32,7 +31,6 @@
   font-family: Roboto !important;
   color: var(--color-212529);
 }
-
 .sub-title {
   font: 24px;
   font-family: Roboto !important;

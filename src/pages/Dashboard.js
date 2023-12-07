@@ -55,7 +55,7 @@ function Dashboard() {
     },
     {
       type: "June",
-      sales: 38,
+      sales: 10,
     },
     {
       type: "July",
@@ -63,19 +63,19 @@ function Dashboard() {
     },
     {
       type: "August",
-      sales: 38,
+      sales: 45,
     },
     {
       type: "September",
-      sales: 38,
+      sales: 52,
     },
     {
       type: "October",
-      sales: 38,
+      sales: 18,
     },
     {
       type: "November",
-      sales: 38,
+      sales: 25,
     },
     {
       type: "December",
@@ -113,11 +113,11 @@ function Dashboard() {
   };
   return (
     <div>
-      <h3 className="mb-4">Dashboard</h3>
+      <h3 className="mb-4 title">Dashboard</h3>
       <div className="d-flex justify-content-between align-items-center gap-3">
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 rounded-3">
           <div>
-            <p className="">Total</p>
+            <p className="desc">Total</p>
             <h4 className="mb-0">$1100</h4>
           </div>
           <div className="d-flex flex-column align-items-end">
@@ -125,13 +125,13 @@ function Dashboard() {
               <BsArrowDownRight />
               32%
             </h6>
-            <p className="mb-0">Compared to April 2022</p>
+            <p className="mb-0 desc">Compared to April 2022</p>
           </div>
         </div>
 
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 rounded-3">
           <div>
-            <p className="">Total</p>
+            <p className="desc">Total</p>
             <h4 className="mb-0">$1100</h4>
           </div>
           <div className="d-flex flex-column align-items-end">
@@ -139,13 +139,13 @@ function Dashboard() {
               <BsArrowDownRight />
               32%
             </h6>
-            <p className="mb-0">Compared to April 2022</p>
+            <p className="mb-0 desc">Compared to April 2022</p>
           </div>
         </div>
 
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 rounded-3">
           <div>
-            <p className="">Total</p>
+            <p className="desc">Total</p>
             <h4 className="mb-0">$1100</h4>
           </div>
           <div className="d-flex flex-column align-items-end">
@@ -153,7 +153,7 @@ function Dashboard() {
               <BsArrowDownRight />
               32%
             </h6>
-            <p className="mb-0">Compared to April 2022</p>
+            <p className="mb-0 desc">Compared to April 2022</p>
           </div>
         </div>
       </div>

@@ -18,6 +18,7 @@ import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,8 +31,22 @@ const MainLayout = () => {
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">S.A</span>
-            <span className="lg-logo">Seller App</span>
+            <span className="sm-logo">
+              <img width={50} height={32} src="logo_web.png" alt="logo" />
+            </span>
+            <span className="lg-logo">
+              <h5
+                className="mb-0"
+                style={{
+                  color: "black",
+                  fontWeight: 700,
+                  fontSize: "34px",
+                  lineHeight: "41.45px",
+                }}
+              >
+                Funiro
+              </h5>
+            </span>
           </h2>
         </div>
         <Menu
@@ -182,27 +197,17 @@ const MainLayout = () => {
               </span>
             </div>
 
+            {/* admin pic */}
             <div className="d-flex gap-3 align-items-center dropdown">
-              <div>
-                <img width={50} height={32} src="logo_web.png" alt="" />
-              </div>
               <div
+                className="d-flex gap-1 flex-row"
                 role="button"
                 id="dropdownMenuLink"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5
-                  className="mb-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "34px",
-                    lineHeight: "41.45px",
-                  }}
-                >
-                  Funiro
-                </h5>
-                <p className="mb-0"></p>
+                <UserOutlined className="fs-5" />
+                <h5 className="mb-0">Admin123</h5>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
