@@ -30,7 +30,7 @@ const MainLayout = () => {
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">DC</span>
+            <span className="sm-logo">S.A</span>
             <span className="lg-logo">Seller App</span>
           </h2>
         </div>
@@ -184,12 +184,7 @@ const MainLayout = () => {
 
             <div className="d-flex gap-3 align-items-center dropdown">
               <div>
-                {/* <img
-                  width={32}
-                  height={32}
-                  src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
-                  alt=""
-                /> */}
+                <img width={50} height={32} src="logo_web.png" alt="" />
               </div>
               <div
                 role="button"
@@ -197,7 +192,16 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0"></h5>
+                <h5
+                  className="mb-0"
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "34px",
+                    lineHeight: "41.45px",
+                  }}
+                >
+                  Funiro
+                </h5>
                 <p className="mb-0"></p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
