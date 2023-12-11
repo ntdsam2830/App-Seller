@@ -1,11 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authServices";
+import {
+  getAuthUser,
+  setAccessToken,
+  setAuthUser,
+} from "../../utils/authStorage";
 
-const getUserfromLocalStorage = localStorage.getItem("user")
-  ? JSON.parse(localStorage.getItem("user"))
-  : null;
+const user = getAuthUser();
+
 const initialState = {
-  user: getUserfromLocalStorage,
+  user: user,
   orders: [],
   isError: false,
   isLoading: false,
@@ -59,6 +63,9 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.user = action.payload;
         state.message = "success";
+        setAuthUser(action.payload);
+        setAccessToken(action.payload.token);
+        window.location.assign("/admin");
       })
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
