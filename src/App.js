@@ -9,6 +9,7 @@ import Orders from "./pages/Orders";
 import Productlist from "./pages/Productlist";
 import Addproduct from "./pages/Addproduct";
 import { getAuthUser } from "./utils/authStorage";
+import ProductItem from "./pages/ProductItem";
 function App() {
   const user = getAuthUser();
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="list-product" element={<Productlist />} />
             <Route path="product" element={<Addproduct />} />
+            <Route path="list-product/:id" element={<ProductItem />} />
           </Route>
         )}
       </Routes>

@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Table, Button } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const data1 = [];
 for (let i = 0; i < 46; i++) {
   data1.push({
     key: i,
+    id: i,
     name: `Edward King ${i}`,
     shortDesc: `London, Park Lane no. ${i}`,
     quantity: 32,
@@ -16,9 +18,11 @@ for (let i = 0; i < 46; i++) {
 
 const Productlist = () => {
   const [data, setData] = useState(data1);
+  const navigate = useNavigate();
 
   const handleEdit = (record) => {
     console.log(record);
+    navigate(`${record.id}`);
   };
 
   const handleDelete = (record) => {
@@ -31,15 +35,20 @@ const Productlist = () => {
       dataIndex: "name",
     },
     {
-      title: "Short Description",
-      dataIndex: "shortDesc",
-    },
-    {
       title: "Quantity",
       dataIndex: "quantity",
     },
     {
+      title: "Quantity Sale",
+      dataIndex: "quantitySale",
+    },
+    {
       title: "Price",
+      dataIndex: "originPrice",
+      render: (text) => <div>${text}</div>,
+    },
+    {
+      title: "Sale Price",
       dataIndex: "price",
       render: (text) => <div>${text}</div>,
     },
