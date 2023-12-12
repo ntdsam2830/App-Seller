@@ -1,41 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import CustomInput from "../components/CustomInput";
 import "react-quill/dist/quill.snow.css";
-import { message, Upload, Input } from "antd";
+import { Input } from "antd";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
-import { InboxOutlined } from "@ant-design/icons";
 import "../App.css";
-
-const { Dragger } = Upload;
-
-const uploadFile = (values) => {
-  console.log("file values: ");
-  console.log(values);
-};
-
-const props = {
-  listType: "picture",
-  multiple: true,
-  accept: "image/*",
-  customRequest(arg1, arg2) {
-    console.log("Dummy Request");
-  },
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
+import { createProducts } from "../features/product/productSlice";
 
 const Addproduct = () => {
   const dispatch = useDispatch();
@@ -54,8 +24,12 @@ const Addproduct = () => {
       image: [],
     },
     onSubmit: (values) => {
-      console.log(values);
-      uploadFile(values);
+      const formData = new FormData();
+      for (let i = 0; i < values.image.length; i++) {
+        formData.append(i, values.image[i]);
+      }
+      values.image = formData;
+      dispatch(createProducts(values));
     },
   });
 
@@ -114,7 +88,7 @@ const Addproduct = () => {
               <input
                 name="type"
                 type="checkbox"
-                onChange={formik.handleChange("type")}
+                cus={formik.handleChange("type")}
                 value="Diningroom"
               />
               Dining Room
@@ -130,19 +104,16 @@ const Addproduct = () => {
             </label>
           </div>
 
-          <div className="mt-3">
-            <Dragger {...props}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibited from
-                uploading company data or other banned files.
-              </p>
-            </Dragger>
+          <div className="form-floating mt-3">
+            <input
+              type="file"
+              name="photo"
+              accept="imgae/*"
+              multiple
+              onChange={(e) =>
+                formik.setFieldValue("image", e.currentTarget.files)
+              }
+            />
           </div>
           <button
             className="btn btn-success border-0 rounded-3 my-5"
