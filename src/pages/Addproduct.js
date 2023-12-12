@@ -1,81 +1,119 @@
 import React from "react";
 import CustomInput from "../components/CustomInput";
-import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Input, Checkbox } from "antd";
-const { Dragger } = Upload;
-const props = {
-  listType: "picture",
-  multiple: true,
-  accept: "image/*",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
-
-const OPTIONS_TYPE = [
-  { label: "Living Room", value: "Livingroom" },
-  { label: "Dining Room", value: "Diningroom" },
-  { label: "Bed Room", value: "Bedroom" },
-];
+import { Input } from "antd";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
+import "../App.css";
+import { createProducts } from "../features/product/productSlice";
 
 const Addproduct = () => {
-  const [desc, setDesc] = useState();
-  const [checkedList, setCheckedList] = useState();
-  const handleDesc = (e) => {
-    setDesc(e);
-  };
-  const onChange = (list) => {
-    setCheckedList(list);
-  };
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      price: 0,
+      originPrice: null,
+      quantity: null,
+      quantitySale: 0,
+      shortDesc: "",
+      fullDesc: "",
+      type: [],
+      rating: 5,
+      discount: "New",
+      image: [],
+    },
+    onSubmit: (values) => {
+      const formData = new FormData();
+      for (let i = 0; i < values.image.length; i++) {
+        formData.append(i, values.image[i]);
+      }
+      values.image = formData;
+      dispatch(createProducts(values));
+    },
+  });
+
   return (
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form>
-          <CustomInput type="text" label="Product Name" />
-          <CustomInput type="number" label="Product Price" />
-          <CustomInput type="number" label="Product Quantity" />
-          <CustomInput type="text" label="Short Description" />
+        <form onSubmit={formik.handleSubmit}>
+          <CustomInput
+            type="text"
+            label="Product Name"
+            onChng={formik.handleChange("name")}
+            onBlr={formik.handleBlur("name")}
+            val={formik.values.name}
+          />
+          <CustomInput
+            type="number"
+            label="Product Price"
+            onChng={formik.handleChange("originPrice")}
+            onBlr={formik.handleBlur("originPrice")}
+            val={formik.values.originPrice}
+          />
+          <CustomInput
+            type="number"
+            label="Product Quantity"
+            onChng={formik.handleChange("quantity")}
+            onBlr={formik.handleBlur("quantity")}
+            val={formik.values.quantity}
+          />
+          <CustomInput
+            type="text"
+            label="Short Description"
+            onChng={formik.handleChange("shortDesc")}
+            onBlr={formik.handleBlur("shortDesc")}
+            val={formik.values.shortDesc}
+          />
           <Input.TextArea
             rows={4}
             style={{ margin: "1rem 0", resize: "none" }}
             placeholder="Full Description"
+            onChange={formik.handleChange("fullDesc")}
+            value={formik.values.fullDesc}
           />
-          <div>
-            Filter:{" "}
-            <Checkbox.Group
-              options={OPTIONS_TYPE}
-              value={checkedList}
-              onChange={onChange}
-            />
+          <div className="product-list-filter">
+            <div>Filter:</div>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Livingroom"
+              />
+              Living Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                cus={formik.handleChange("type")}
+                value="Diningroom"
+              />
+              Dining Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Bedroom"
+              />
+              Bed Room
+            </label>
           </div>
 
-          <div className="mt-3">
-            <Dragger {...props}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibited from
-                uploading company data or other banned files.
-              </p>
-            </Dragger>
+          <div className="form-floating mt-3">
+            <input
+              type="file"
+              name="photo"
+              accept="imgae/*"
+              multiple
+              onChange={(e) =>
+                formik.setFieldValue("image", e.currentTarget.files)
+              }
+            />
           </div>
           <button
             className="btn btn-success border-0 rounded-3 my-5"

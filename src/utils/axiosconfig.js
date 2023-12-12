@@ -1,12 +1,10 @@
-const getTokenFromLocalStorage = localStorage.getItem("user")
-  ? JSON.parse(localStorage.getItem("user"))
-  : null;
+import { getAccessToken } from "./authStorage";
+
+const token = getAccessToken();
 
 export const config = {
   headers: {
-    Authorization: `Bearer ${
-      getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""
-    }`,
+    Authorization: `Bearer ${token !== null ? token : ""}`,
     Accept: "application/json",
   },
 };
