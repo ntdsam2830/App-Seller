@@ -1,15 +1,14 @@
 import React from "react";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload } from "antd";
+import { message, Upload, Input, Checkbox } from "antd";
 const { Dragger } = Upload;
 const props = {
-  name: "file",
+  listType: "picture",
   multiple: true,
-  action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+  accept: "image/*",
   onChange(info) {
     const { status } = info.file;
     if (status !== "uploading") {
@@ -26,38 +25,45 @@ const props = {
   },
 };
 
+const OPTIONS_TYPE = [
+  { label: "Living Room", value: "Livingroom" },
+  { label: "Dining Room", value: "Diningroom" },
+  { label: "Bed Room", value: "Bedroom" },
+];
+
 const Addproduct = () => {
   const [desc, setDesc] = useState();
+  const [checkedList, setCheckedList] = useState();
   const handleDesc = (e) => {
     setDesc(e);
+  };
+  const onChange = (list) => {
+    setCheckedList(list);
   };
   return (
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
         <form>
-          <CustomInput type="text" label="Enter Product Title" />
-          <div className="mb-3 mt-3">
-            <ReactQuill
-              theme="snow"
-              value={desc}
-              onChange={(evt) => {
-                handleDesc(evt);
-              }}
+          <CustomInput type="text" label="Product Name" />
+          <CustomInput type="number" label="Product Price" />
+          <CustomInput type="number" label="Product Quantity" />
+          <CustomInput type="text" label="Short Description" />
+          <Input.TextArea
+            rows={4}
+            style={{ margin: "1rem 0", resize: "none" }}
+            placeholder="Full Description"
+          />
+          <div>
+            Filter:{" "}
+            <Checkbox.Group
+              options={OPTIONS_TYPE}
+              value={checkedList}
+              onChange={onChange}
             />
           </div>
-          <select name="" className="form-control py-3 mb-3 mt-3" id="">
-            <option value="">Select Brand</option>
-          </select>
-          <select name="" className="form-control py-3 mb-3 mt-3" id="">
-            <option value="">Select Category</option>
-          </select>
-          <select name="" className="form-control py-3 mb-3 mt-3" id="">
-            <option value="">Select Color</option>
-          </select>
-          <CustomInput type="number" label="Enter Product Prize" />
+
           <div className="mt-3">
-            {" "}
             <Dragger {...props}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
