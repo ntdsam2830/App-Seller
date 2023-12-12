@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomInput from "../components/CustomInput";
-import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
+import { message, Upload, Input } from "antd";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
 import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Input, Checkbox } from "antd";
+import "../App.css";
+
 const { Dragger } = Upload;
+
+const uploadFile = (values) => {
+  console.log("file values: ");
+  console.log(values);
+};
+
 const props = {
   listType: "picture",
   multiple: true,
   accept: "image/*",
+  customRequest(arg1, arg2) {
+    console.log("Dummy Request");
+  },
   onChange(info) {
     const { status } = info.file;
     if (status !== "uploading") {
@@ -25,42 +37,97 @@ const props = {
   },
 };
 
-const OPTIONS_TYPE = [
-  { label: "Living Room", value: "Livingroom" },
-  { label: "Dining Room", value: "Diningroom" },
-  { label: "Bed Room", value: "Bedroom" },
-];
-
 const Addproduct = () => {
-  const [desc, setDesc] = useState();
-  const [checkedList, setCheckedList] = useState();
-  const handleDesc = (e) => {
-    setDesc(e);
-  };
-  const onChange = (list) => {
-    setCheckedList(list);
-  };
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      price: 0,
+      originPrice: null,
+      quantity: null,
+      quantitySale: 0,
+      shortDesc: "",
+      fullDesc: "",
+      type: [],
+      rating: 5,
+      discount: "New",
+      image: [],
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      uploadFile(values);
+    },
+  });
+
   return (
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form>
-          <CustomInput type="text" label="Product Name" />
-          <CustomInput type="number" label="Product Price" />
-          <CustomInput type="number" label="Product Quantity" />
-          <CustomInput type="text" label="Short Description" />
+        <form onSubmit={formik.handleSubmit}>
+          <CustomInput
+            type="text"
+            label="Product Name"
+            onChng={formik.handleChange("name")}
+            onBlr={formik.handleBlur("name")}
+            val={formik.values.name}
+          />
+          <CustomInput
+            type="number"
+            label="Product Price"
+            onChng={formik.handleChange("originPrice")}
+            onBlr={formik.handleBlur("originPrice")}
+            val={formik.values.originPrice}
+          />
+          <CustomInput
+            type="number"
+            label="Product Quantity"
+            onChng={formik.handleChange("quantity")}
+            onBlr={formik.handleBlur("quantity")}
+            val={formik.values.quantity}
+          />
+          <CustomInput
+            type="text"
+            label="Short Description"
+            onChng={formik.handleChange("shortDesc")}
+            onBlr={formik.handleBlur("shortDesc")}
+            val={formik.values.shortDesc}
+          />
           <Input.TextArea
             rows={4}
             style={{ margin: "1rem 0", resize: "none" }}
             placeholder="Full Description"
+            onChange={formik.handleChange("fullDesc")}
+            value={formik.values.fullDesc}
           />
-          <div>
-            Filter:{" "}
-            <Checkbox.Group
-              options={OPTIONS_TYPE}
-              value={checkedList}
-              onChange={onChange}
-            />
+          <div className="product-list-filter">
+            <div>Filter:</div>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Livingroom"
+              />
+              Living Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Diningroom"
+              />
+              Dining Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Bedroom"
+              />
+              Bed Room
+            </label>
           </div>
 
           <div className="mt-3">
