@@ -29,6 +29,7 @@ const Addproduct = () => {
         formData.append(i, values.image[i]);
       }
       values.image = formData;
+      console.log(values);
       dispatch(createProducts(values));
     },
   });
@@ -88,7 +89,7 @@ const Addproduct = () => {
               <input
                 name="type"
                 type="checkbox"
-                cus={formik.handleChange("type")}
+                onChange={formik.handleChange("type")}
                 value="Diningroom"
               />
               Dining Room
