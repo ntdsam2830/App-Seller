@@ -1,6 +1,9 @@
 import axios from "axios";
 import { config } from "../../utils/axiosconfig";
 import { base_url } from "../../utils/baseUrl";
+import { getAccessToken } from "../../utils/authStorage";
+
+const token = getAccessToken();
 
 const getProducts = async () => {
   const response = await axios.get(`${base_url}product/`);
@@ -11,7 +14,13 @@ const createProduct = async (product) => {
   const response = await axios.post(
     `${base_url}product/createproduct`,
     product,
-    config
+    {
+      headers: {
+        Authorization: `Bearer ${token !== null ? token : ""}`,
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
 
   return response.data;

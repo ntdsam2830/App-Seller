@@ -24,13 +24,23 @@ const Addproduct = () => {
       image: [],
     },
     onSubmit: (values) => {
+      // console.log(values);
       const formData = new FormData();
-      for (let i = 0; i < values.image.length; i++) {
-        formData.append(i, values.image[i]);
+      formData.append("name", values.name);
+      formData.append("price", values.price);
+      formData.append("originPrice", values.originPrice);
+      formData.append("quantity", values.quantity);
+      formData.append("shortDesc", values.shortDesc);
+      formData.append("fullDesc", values.fullDesc);
+      for (let i = 0; i < values.type.length; i++) {
+        formData.append("type", values.type[i]);
       }
-      values.image = formData;
-      console.log(values);
-      dispatch(createProducts(values));
+      formData.append("rating", values.rating);
+      formData.append("discount", values.discount);
+      for (let i = 0; i < values.image.length; i++) {
+        formData.append("image", values.image[i]);
+      }
+      dispatch(createProducts(formData));
     },
   });
 
@@ -109,7 +119,7 @@ const Addproduct = () => {
             <input
               type="file"
               name="photo"
-              accept="imgae/*"
+              accept="image/*"
               multiple
               onChange={(e) =>
                 formik.setFieldValue("image", e.currentTarget.files)
