@@ -3,7 +3,8 @@ import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Input, Checkbox } from "antd";
+import { message, Upload, Input, Checkbox, Flex } from "antd";
+import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 const { Dragger } = Upload;
@@ -136,13 +137,21 @@ const ProductItem = () => {
           {formik.errors.Dis && formik.touched.Dis && (
             <p>{formik.errors.Dis}</p>
           )}
-
-          <button
-            className="btn btn-success border-0 rounded-3 my-5"
-            type="submit"
-          >
-            Submit
-          </button>
+          <Flex gap="small" wrap="wrap">
+            <button
+              className="btn btn-success border-0 rounded-3 my-5"
+              type="submit"
+            >
+              Submit
+            </button>
+            <Link
+              to="/admin/list-product"
+              className="btn btn-primary border-0 rounded-3 my-5"
+              type="submit"
+            >
+              Back
+            </Link>
+          </Flex>
         </form>
       </div>
     </div>
