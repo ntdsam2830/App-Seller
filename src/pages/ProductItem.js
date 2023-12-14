@@ -31,7 +31,7 @@ const props = {
 const OPTIONS_TYPE = [
   { label: "Living Room", value: "Livingroom" },
   { label: "Dining Room", value: "Diningroom" },
-  { label: "Bed Room", value: "Bedroom" },
+  { label: "Bedroom", value: "Bedroom" },
 ];
 
 const ProductItem = () => {
