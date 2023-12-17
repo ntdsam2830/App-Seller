@@ -8,6 +8,7 @@ import {
   deleteOneProduct,
   getProducts,
 } from "../features/product/productSlice";
+import Swal from "sweetalert2";
 
 const Productlist = () => {
   const navigate = useNavigate();
@@ -20,8 +21,29 @@ const Productlist = () => {
     navigate(`${record.id}`);
   };
 
+  // const handleDelete = (record) => {
+  //   dispatch(deleteOneProduct(record.id));
+  // };
+
   const handleDelete = (record) => {
-    dispatch(deleteOneProduct(record.id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this product!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteOneProduct(record.id));
+        Swal.fire({
+          title: "Deleted!",
+          text: "This product has been deleted.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   const columns = [

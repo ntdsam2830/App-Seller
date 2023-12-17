@@ -7,6 +7,9 @@ import { message, Upload, Input, Checkbox, Flex } from "antd";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+
 const { Dragger } = Upload;
 const props = {
   listType: "picture",
@@ -56,7 +59,7 @@ const ProductItem = () => {
         .min(2, "Minimum 2 characters")
         .max(200, "Maximum 200 characters"),
       Price: Yup.number().min(0, "No negative number"),
-      Quantity: Yup.number().min(0),
+      Quantity: Yup.number().min(0, "No negative number"),
       Short: Yup.string().max(15, "Maximum 100 characters"),
       Dis: Yup.number().min(0).max(100),
     }),
@@ -64,6 +67,13 @@ const ProductItem = () => {
       console.log(values);
     },
   });
+  const Alert = () => {
+    Swal.fire({
+      title: "Edit Product Successfully!",
+      icon: "success",
+      confirmButtonColor: "#1677ff",
+    });
+  };
   return (
     <div>
       <h3 className="mb-4 title">Edit Product</h3>
@@ -141,6 +151,7 @@ const ProductItem = () => {
             <button
               className="btn btn-success border-0 rounded-3 my-5"
               type="submit"
+              onClick={Alert}
             >
               Submit
             </button>
