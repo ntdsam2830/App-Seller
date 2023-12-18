@@ -38,11 +38,11 @@ const MainLayout = () => {
                 style={{
                   color: "black",
                   fontWeight: 700,
-                  fontSize: "34px",
+                  fontSize: "25px",
                   lineHeight: "41.45px",
                 }}
               >
-                Funiro
+                Future Furniture
               </h5>
             </span>
           </h2>
