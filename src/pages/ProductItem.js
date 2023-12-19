@@ -4,11 +4,13 @@ import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload, Input, Checkbox, Flex } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useEffect } from "react";
-import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { editProduct } from "../features/product/productSlice";
+// import { useEffect } from "react";
+// import Swal from "sweetalert2";
 
 const { Dragger } = Upload;
 const props = {
@@ -38,6 +40,8 @@ const OPTIONS_TYPE = [
 ];
 
 const ProductItem = () => {
+  const dispatch = useDispatch();
+  let { id } = useParams();
   const [desc, setDesc] = useState();
   const [checkedList, setCheckedList] = useState();
   const handleDesc = (e) => {
@@ -48,32 +52,38 @@ const ProductItem = () => {
   };
   const formik = useFormik({
     initialValues: {
-      Name: "",
-      Price: "",
-      Quantity: "",
-      Short: "",
-      Dis: "",
+      name: "",
+      originPrice: 0,
+      quantity: 0,
+      shortDesc: "",
+      fullDesc: "",
+      type: [],
+      discount: "",
+
+      id: `${id}`,
     },
     validationSchema: Yup.object({
-      Name: Yup.string()
+      name: Yup.string()
         .min(2, "Minimum 2 characters")
         .max(200, "Maximum 200 characters"),
-      Price: Yup.number().min(0, "No negative number"),
-      Quantity: Yup.number().min(0, "No negative number"),
-      Short: Yup.string().max(15, "Maximum 100 characters"),
-      Dis: Yup.number().min(0).max(100),
+      originPrice: Yup.number().min(1, "Invalid value"),
+      quantity: Yup.number().min(0, "Invalid value"),
+      shortDesc: Yup.string().max(200, "Maximum 200 characters"),
+      discount: Yup.number()
+        .min(1, "Discount price must be greater than 1")
+        .max(100, "Discount price must be less than 100"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(editProduct(values));
     },
   });
-  const Alert = () => {
-    Swal.fire({
-      title: "Edit Product Successfully!",
-      icon: "success",
-      confirmButtonColor: "#1677ff",
-    });
-  };
+  // const Alert = () => {
+  //   Swal.fire({
+  //     title: "Edit Product Successfully!",
+  //     icon: "success",
+  //     confirmButtonColor: "#1677ff",
+  //   });
+  // };
   return (
     <div>
       <h3 className="mb-4 title">Edit Product</h3>
@@ -82,46 +92,46 @@ const ProductItem = () => {
           <CustomInput
             type="text"
             label="Product Name"
-            name="Name"
-            value={formik.values.Name}
+            name="name"
+            value={formik.values.name}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
-          {formik.errors.Name && formik.touched.Name && (
-            <p>{formik.errors.Name}</p>
+          {formik.errors.name && formik.touched.name && (
+            <p className="alert-error">{formik.errors.name}</p>
           )}
           <CustomInput
             type="number"
             label="Product Price($)"
-            name="Price"
-            value={formik.values.Price}
+            name="originPrice"
+            value={formik.values.originPrice}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
-          {formik.errors.Price && formik.touched.Price && (
-            <p>{formik.errors.Price}</p>
+          {formik.errors.originPrice && formik.touched.originPrice && (
+            <p className="alert-error">{formik.errors.originPrice}</p>
           )}
           <CustomInput
             type="number"
             label="Product Quantity"
-            name="Quantity"
-            value={formik.values.Quantity}
+            name="quantity"
+            value={formik.values.quantity}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
-          {formik.errors.Quantity && formik.touched.Quantity && (
-            <p>{formik.errors.Quantity}</p>
+          {formik.errors.quantity && formik.touched.quantity && (
+            <p className="alert-error">{formik.errors.quantity}</p>
           )}
           <CustomInput
             type="text"
             label="Short Description"
-            name="Short"
-            value={formik.values.Short}
+            name="shortDesc"
+            value={formik.values.shortDesc}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
-          {formik.errors.Short && formik.touched.Short && (
-            <p>{formik.errors.Short}</p>
+          {formik.errors.shortDesc && formik.touched.shortDesc && (
+            <p className="alert-error">{formik.errors.shortDesc}</p>
           )}
           <Input.TextArea
             rows={4}
@@ -139,19 +149,18 @@ const ProductItem = () => {
           <CustomInput
             type="number"
             label="Discount Price(%)"
-            name="Dis"
-            value={formik.values.Dis}
+            name="discount"
+            value={formik.values.discount}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
-          {formik.errors.Dis && formik.touched.Dis && (
-            <p>{formik.errors.Dis}</p>
+          {formik.errors.discount && formik.touched.discount && (
+            <p className="alert-error">{formik.errors.discount}</p>
           )}
           <Flex gap="small" wrap="wrap">
             <button
               className="btn btn-success border-0 rounded-3 my-5"
               type="submit"
-              onClick={Alert}
             >
               Submit
             </button>
