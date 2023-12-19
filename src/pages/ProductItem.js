@@ -11,8 +11,7 @@ import { useDispatch } from "react-redux";
 import { editProduct } from "../features/product/productSlice";
 // import { useEffect } from "react";
 // import Swal from "sweetalert2";
-
-const { Dragger } = Upload;
+const { TextArea } = Input;
 const props = {
   listType: "picture",
   multiple: true,
@@ -59,7 +58,6 @@ const ProductItem = () => {
       fullDesc: "",
       type: [],
       discount: "",
-
       id: `${id}`,
     },
     validationSchema: Yup.object({
@@ -133,18 +131,55 @@ const ProductItem = () => {
           {formik.errors.shortDesc && formik.touched.shortDesc && (
             <p className="alert-error">{formik.errors.shortDesc}</p>
           )}
-          <Input.TextArea
-            rows={4}
-            style={{ margin: "1rem 0", resize: "none" }}
+
+          <TextArea
+            style={{
+              marginBottom: "10px",
+              marginTop: "15px",
+              borderColor: "#00000033",
+              borderRadius: "5px",
+            }}
             placeholder="Full Description"
+            type="text"
+            label="Full Description"
+            onChange={formik.handleChange("fullDesc")}
+            onBlur={formik.handleBlur("fullDesc")}
+            val={formik.values.fullDesc}
+            autoSize={{
+              minRows: 3,
+              maxRows: 5,
+            }}
           />
-          <div>
-            Type:{" "}
-            <Checkbox.Group
-              options={OPTIONS_TYPE}
-              value={checkedList}
-              onChange={onChange}
-            />
+
+          <div className="product-list-filter">
+            <div>Filter:</div>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Livingroom"
+              />
+              Living Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Diningroom"
+              />
+              Dining Room
+            </label>
+            <label>
+              <input
+                name="type"
+                type="checkbox"
+                onChange={formik.handleChange("type")}
+                value="Bedroom"
+              />
+              Bed Room
+            </label>
           </div>
           <CustomInput
             type="number"

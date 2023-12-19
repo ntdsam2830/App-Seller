@@ -75,7 +75,7 @@
 
 .custom-textarea textarea {
   resize: none;
-  border-color: rgba(0, 0, 0, 0.2);
+  border-color: #00000033;
   border-radius: 5px;
   padding: 0.5rem 1rem;
 }
