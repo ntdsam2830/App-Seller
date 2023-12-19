@@ -5,6 +5,7 @@ import {
   setAccessToken,
   setAuthUser,
 } from "../../utils/authStorage";
+import { notification } from "antd";
 
 const user = getAuthUser();
 
@@ -54,6 +55,7 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: (buildeer) => {
     buildeer
+      // API Login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
@@ -65,7 +67,13 @@ export const authSlice = createSlice({
         state.message = "success";
         setAuthUser(action.payload);
         setAccessToken(action.payload.token);
-        window.location.assign("/admin");
+        notification.success({
+          message: "Hello Admin",
+          description: "Welcome to Future Furniture!",
+        });
+        setTimeout(() => {
+          window.location.assign("/admin");
+        }, 500);
       })
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
@@ -73,6 +81,8 @@ export const authSlice = createSlice({
         state.message = action.error;
         state.isLoading = false;
       })
+
+      // API get orders
       .addCase(getOrders.pending, (state) => {
         state.isLoading = true;
       })
@@ -89,6 +99,8 @@ export const authSlice = createSlice({
         state.message = action.error;
         state.isLoading = false;
       })
+
+      // API get order by user
       .addCase(getOrderByUser.pending, (state) => {
         state.isLoading = true;
       })
