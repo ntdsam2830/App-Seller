@@ -10,6 +10,8 @@ import { createProducts } from "../features/product/productSlice";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
+const digitRegExp = /^[0-9]*$/;
+
 const Addproduct = () => {
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -28,13 +30,25 @@ const Addproduct = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
+        .required("Product name is required")
         .min(2, "Minimum 2 characters")
         .max(200, "Maximum 200 characters"),
-      originPrice: Yup.number().min(0, "No negative number"),
-      quantity: Yup.number().min(0, "No negative number"),
-      shortDesc: Yup.string().max(15, "Maximum 100 characters"),
+      originPrice: Yup.string()
+        .required("Origin price is required")
+        .matches(digitRegExp, "Origin price is not valid")
+        .min(0, "No negative number"),
+      quantity: Yup.string()
+        .required("Quantity is required")
+        .matches(digitRegExp, "Quantity is not valid")
+        .min(0, "No negative number"),
+      shortDesc: Yup.string()
+        .required("Short description is required")
+        .max(15, "Maximum 100 characters"),
+      fullDesc: Yup.string().required("Full description is required"),
     }),
     onSubmit: (values) => {
+      values.originPrice = Number(values.originPrice);
+      values.quantity = Number(values.quantity);
       console.log(values);
       const formData = new FormData();
       formData.append("name", values.name);
@@ -54,12 +68,6 @@ const Addproduct = () => {
       dispatch(createProducts(formData));
     },
   });
-  const Alert = () => {
-    Swal.fire({
-      title: "Add Product Successfully!",
-      icon: "success",
-    });
-  };
 
   return (
     <div>
@@ -74,27 +82,33 @@ const Addproduct = () => {
             val={formik.values.name}
           />
           {formik.errors.name && formik.touched.name && (
-            <p>{formik.errors.name}</p>
+            <p className="alert-error">
+              {formik.touched.name && formik.errors.name}
+            </p>
           )}
           <CustomInput
-            type="number"
+            type="text"
             label="Product Price($)"
             onChng={formik.handleChange("originPrice")}
             onBlr={formik.handleBlur("originPrice")}
             val={formik.values.originPrice}
           />
           {formik.errors.originPrice && formik.touched.originPrice && (
-            <p>{formik.errors.originPrice}</p>
+            <p className="alert-error">
+              {formik.touched.originPrice && formik.errors.originPrice}
+            </p>
           )}
           <CustomInput
-            type="number"
+            type="text"
             label="Product Quantity"
             onChng={formik.handleChange("quantity")}
             onBlr={formik.handleBlur("quantity")}
             val={formik.values.quantity}
           />
           {formik.errors.quantity && formik.touched.quantity && (
-            <p>{formik.errors.quantity}</p>
+            <p className="alert-error">
+              {formik.touched.quantity && formik.errors.quantity}
+            </p>
           )}
           <CustomInput
             type="text"
@@ -104,15 +118,28 @@ const Addproduct = () => {
             val={formik.values.shortDesc}
           />
           {formik.errors.shortDesc && formik.touched.shortDesc && (
-            <p>{formik.errors.shortDesc}</p>
+            <p className="alert-error">
+              {formik.touched.shortDesc && formik.errors.shortDesc}
+            </p>
           )}
-          <Input.TextArea
-            rows={4}
-            style={{ margin: "1rem 0", resize: "none" }}
-            placeholder="Full Description"
-            onChange={formik.handleChange("fullDesc")}
-            value={formik.values.fullDesc}
-          />
+
+          <div className="custom-textarea">
+            <label htmlFor="Full Description">Full Description</label>
+            <textarea
+              type="text"
+              label="Full Description"
+              onChange={formik.handleChange("fullDesc")}
+              onBlur={formik.handleBlur("fullDesc")}
+              val={formik.values.fullDesc}
+              rows="5"
+            />
+            {formik.errors.fullDesc && formik.touched.fullDesc && (
+              <p className="alert-error">
+                {formik.touched.fullDesc && formik.errors.fullDesc}
+              </p>
+            )}
+          </div>
+
           <div className="product-list-filter">
             <div>Filter:</div>
             <label>
@@ -159,7 +186,6 @@ const Addproduct = () => {
           <button
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
-            onClick={Alert}
           >
             Add Product
           </button>
