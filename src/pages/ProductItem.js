@@ -162,7 +162,9 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Livingroom"
-                defaultChecked={data.type.includes("Livingroom") ? true : false}
+                checked={
+                  formik.values.type.includes("Livingroom") ? true : false
+                }
               />
               Living Room
             </label>
@@ -172,7 +174,9 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Diningroom"
-                defaultChecked={data.type.includes("Diningroom") ? true : false}
+                checked={
+                  formik.values.type.includes("Diningroom") ? true : false
+                }
               />
               Dining Room
             </label>
@@ -182,7 +186,7 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Bedroom"
-                defaultChecked={data.type.includes("Bedroom") ? true : false}
+                checked={formik.values.type.includes("Bedroom") ? true : false}
               />
               Bed Room
             </label>

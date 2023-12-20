@@ -41,10 +41,13 @@ export const deleteOneProduct = createAsyncThunk(
 export const editProduct = createAsyncThunk(
   "product/edit-product",
   async (data, thunkAPI) => {
+    console.log(data);
     try {
       return await productService.editOneProduct(data);
     } catch (error) {
-      console.log(error);
+      notification.error({
+        message: "Edit product not successfully!",
+      });
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -144,6 +147,12 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
+        notification.success({
+          message: "Edit product successfully!",
+        });
+        setTimeout(() => {
+          window.location.assign("/admin/list-product");
+        }, 1000);
       })
       .addCase(editProduct.rejected, (state, action) => {
         state.isLoading = false;
