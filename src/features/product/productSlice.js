@@ -50,6 +50,20 @@ export const editProduct = createAsyncThunk(
   }
 );
 
+export const getOneProduct = createAsyncThunk(
+  "product/get-product",
+  async (id, thunkAPI) => {
+    try {
+      return await productService.getOneProduct(id);
+    } catch (error) {
+      notification.error({
+        message: "Can not get one product!",
+      });
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const initialState = {
   oneProduct: null,
   products: null,
@@ -112,6 +126,9 @@ export const productSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.message = action.payload;
+        state.products = [...state.products].filter(
+          (item) => item.id !== action.meta.arg
+        );
       })
       .addCase(deleteOneProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -127,9 +144,25 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.oneProduct = action.payload;
       })
       .addCase(editProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+
+      .addCase(getOneProduct.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getOneProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        console.log(action.payload);
+        state.oneProduct = action.payload;
+      })
+      .addCase(getOneProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

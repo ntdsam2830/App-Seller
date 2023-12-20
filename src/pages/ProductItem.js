@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../components/CustomInput";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
@@ -7,59 +7,40 @@ import { message, Upload, Input, Checkbox, Flex } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { editProduct } from "../features/product/productSlice";
-// import { useEffect } from "react";
-// import Swal from "sweetalert2";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { editProduct, getOneProduct } from "../features/product/productSlice";
+
 const { TextArea } = Input;
-const props = {
-  listType: "picture",
-  multiple: true,
-  accept: "image/*",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
+
+const convertToNumber = (input) => {
+  if (/\d+%$/.test(input)) {
+    const numericValue = parseInt(input);
+    return Math.abs(numericValue) || 0;
+  } else if (/^(-?\d+)$/.test(input)) {
+    return parseInt(input);
+  } else {
+    return 0;
+  }
 };
 
-const OPTIONS_TYPE = [
-  { label: "Living Room", value: "Livingroom" },
-  { label: "Dining Room", value: "Diningroom" },
-  { label: "Bedroom", value: "Bedroom" },
-];
+const initProduct = {
+  name: "",
+  originPrice: 1,
+  quantity: 0,
+  shortDesc: "",
+  fullDesc: "",
+  type: [],
+  discount: 0,
+};
 
 const ProductItem = () => {
   const dispatch = useDispatch();
   let { id } = useParams();
-  const [desc, setDesc] = useState();
-  const [checkedList, setCheckedList] = useState();
-  const handleDesc = (e) => {
-    setDesc(e);
-  };
-  const onChange = (list) => {
-    setCheckedList(list);
-  };
+
+  const data = useSelector((state) => state.product.oneProduct) || initProduct;
+
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      originPrice: 0,
-      quantity: 0,
-      shortDesc: "",
-      fullDesc: "",
-      type: [],
-      discount: "",
-      id: `${id}`,
-    },
+    initialValues: initProduct,
     validationSchema: Yup.object({
       name: Yup.string()
         .min(2, "Minimum 2 characters")
@@ -75,13 +56,35 @@ const ProductItem = () => {
       dispatch(editProduct(values));
     },
   });
-  // const Alert = () => {
-  //   Swal.fire({
-  //     title: "Edit Product Successfully!",
-  //     icon: "success",
-  //     confirmButtonColor: "#1677ff",
-  //   });
-  // };
+
+  useEffect(() => {
+    dispatch(getOneProduct(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (!data.id || formik.values.id === data.id) return;
+    formik.setValues({
+      name: data.name,
+      originPrice: data.originPrice,
+      quantity: data.quantity,
+      shortDesc: data.shortDesc,
+      fullDesc: data.fullDesc,
+      type: data.type,
+      discount: convertToNumber(data.discount),
+      id: data.id,
+    });
+  }, [
+    data.discount,
+    data.fullDesc,
+    data.id,
+    data.name,
+    data.originPrice,
+    data.quantity,
+    data.shortDesc,
+    data.type,
+    formik,
+  ]);
+
   return (
     <div>
       <h3 className="mb-4 title">Edit Product</h3>
@@ -91,7 +94,7 @@ const ProductItem = () => {
             type="text"
             label="Product Name"
             name="name"
-            value={formik.values.name}
+            val={formik.values.name}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
@@ -102,7 +105,7 @@ const ProductItem = () => {
             type="number"
             label="Product Price($)"
             name="originPrice"
-            value={formik.values.originPrice}
+            val={formik.values.originPrice}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
@@ -113,7 +116,7 @@ const ProductItem = () => {
             type="number"
             label="Product Quantity"
             name="quantity"
-            value={formik.values.quantity}
+            val={formik.values.quantity}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
@@ -124,7 +127,7 @@ const ProductItem = () => {
             type="text"
             label="Short Description"
             name="shortDesc"
-            value={formik.values.shortDesc}
+            val={formik.values.shortDesc}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
@@ -144,7 +147,7 @@ const ProductItem = () => {
             label="Full Description"
             onChange={formik.handleChange("fullDesc")}
             onBlur={formik.handleBlur("fullDesc")}
-            val={formik.values.fullDesc}
+            value={formik.values.fullDesc}
             autoSize={{
               minRows: 3,
               maxRows: 5,
@@ -159,6 +162,7 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Livingroom"
+                defaultChecked={data.type.includes("Livingroom") ? true : false}
               />
               Living Room
             </label>
@@ -168,6 +172,7 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Diningroom"
+                defaultChecked={data.type.includes("Diningroom") ? true : false}
               />
               Dining Room
             </label>
@@ -177,6 +182,7 @@ const ProductItem = () => {
                 type="checkbox"
                 onChange={formik.handleChange("type")}
                 value="Bedroom"
+                defaultChecked={data.type.includes("Bedroom") ? true : false}
               />
               Bed Room
             </label>
@@ -185,7 +191,7 @@ const ProductItem = () => {
             type="number"
             label="Discount Price(%)"
             name="discount"
-            value={formik.values.discount}
+            val={formik.values.discount}
             onBlr={formik.onBlur}
             onChng={formik.handleChange}
           />
@@ -202,7 +208,8 @@ const ProductItem = () => {
             <Link
               to="/admin/list-product"
               className="btn btn-primary border-0 rounded-3 my-5"
-              type="submit"
+              type="button"
+              onClick={formik.resetForm}
             >
               Back
             </Link>

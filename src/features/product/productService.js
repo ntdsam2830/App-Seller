@@ -36,7 +36,6 @@ const deleteProduct = async (id) => {
 };
 
 const editOneProduct = async (data) => {
-  console.log(data);
   const response = await axios.put(
     `${base_url}product/updateproduct/${data.id}`,
     data,
@@ -45,11 +44,17 @@ const editOneProduct = async (data) => {
   return response.data;
 };
 
+const getOneProduct = async (id) => {
+  const response = await axios.get(`${base_url}product/${id}`, config);
+  return response.data;
+};
+
 const productService = {
   getProducts,
   createProduct,
   deleteProduct,
   editOneProduct,
+  getOneProduct,
 };
 
 export default productService;

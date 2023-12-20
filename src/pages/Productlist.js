@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Table, Button } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
@@ -17,13 +17,8 @@ const Productlist = () => {
   const data = useSelector((state) => state.product.products);
 
   const handleEdit = (record) => {
-    console.log(record);
     navigate(`${record.id}`);
   };
-
-  // const handleDelete = (record) => {
-  //   dispatch(deleteOneProduct(record.id));
-  // };
 
   const handleDelete = (record) => {
     Swal.fire({
@@ -87,7 +82,7 @@ const Productlist = () => {
 
   useEffect(() => {
     dispatch(getProducts());
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   return (
     <div>
